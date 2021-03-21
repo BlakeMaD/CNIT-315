@@ -15,6 +15,8 @@ program will identify which line(s) are incorrect, and offer suggestions to fix 
 end with a rhyming word, which the program will also identify possible rhymes for, suggesting options to create a valid poem.
 
 # Linux Installation
+Note: Linux operations were completed using Ubuntu 20.04 (https://ubuntu.com/download/desktop) on Oracle VMware VirtualBox (https://www.virtualbox.org/wiki/Downloads)
+
 To install gtk and all dependencies necessary for the gui, run ```sudo apt-get install libgtk-3-dev```
 
 To compile the completed c program with gcc, run ``    gcc `pkg-config --cflags gtk+-3.0` -o example-0 example-0.c `pkg-config --libs gtk+-3.0` ``
