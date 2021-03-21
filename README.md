@@ -13,3 +13,9 @@ seven for the second, and five for the third. The program will accept three line
 whether or not the user actually followed the proper Haiku format as stated. If the user does not follow the proper format, the
 program will identify which line(s) are incorrect, and offer suggestions to fix the line(s). Couplets are two-line poems that
 end with a rhyming word, which the program will also identify possible rhymes for, suggesting options to create a valid poem.
+
+# Linux Installation
+To install gtk and all dependencies necessary for the gui, run ```sudo apt-get install libgtk-3-dev```
+
+To compile the completed c program with gcc, run ``    gcc `pkg-config --cflags gtk+-3.0` -o example-0 example-0.c `pkg-config --libs gtk+-3.0` ``
+where ``example-0`` and ``example-0.c`` can be replaced with the compiled program and completed c file respectively.
