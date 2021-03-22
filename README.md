@@ -21,3 +21,8 @@ To install gtk and all dependencies necessary for the gui, run ```sudo apt-get i
 
 To compile the completed c program with gcc, run ``    gcc `pkg-config --cflags gtk+-3.0` -o example-0 example-0.c `pkg-config --libs gtk+-3.0` ``
 where ``example-0`` and ``example-0.c`` can be replaced with the compiled program and completed c file respectively.
+
+# Windows Installation
+1. visit https://www.msys2.org/ to download the linux like environment for Windows
+2. Install GTK3 and its dependencies. Open a MSYS2 shell, and run: ``pacman -S mingw-w64-x86_64-gtk3``
+3. Installing development tools like gcc may be necessary, to install gcc and other development tools, run: ``pacman -S mingw-w64-x86_64-toolchain base-devel`` 
