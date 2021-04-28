@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <curl/curl.h>
+#include <stdbool.h>
 #include "syllables.c" /* has to be installed with "sudo apt-get install libcurl4-openssl-dev" */
 #define INPUTSIZE 120
 
@@ -18,23 +19,34 @@ int main()
   char haikuLine[INPUTSIZE];
 
   void getSyllables(char *word);
-  void verifyLine(char *haikuLine);
+  void verifyLine(char *haikuLine, int syllablesNeeded);
   do
   {
     /*print out the main menu, taking in user input to select a function*/
-    printf("Main Menu\n");
+    printf("\n-------Main Menu-------\n");
     printf("0: Haiku Verification\n");
     printf("1: Couplet Verification\n");
     printf("e: Exit Program\n");
-    printf(" Please enter an option from the main menu: ");
+    printf("\nPlease enter an option from the main menu: ");
     scanf(" %c", &menu_option);
 
     switch (menu_option)
     {
     case '0':
-      printf("Enter the first line (5 syllables):\n");
+      printf("\nEnter the first line (5 syllables):");
       scanf(" %[^\n]", haikuLine);
-      verifyLine(haikuLine);
+      printf("\n---------------Line 1: Syllable Counts-----------------");
+      verifyLine(haikuLine, 5);
+
+      printf("\nEnter the second line (7 syllables):");
+      scanf(" %[^\n]", haikuLine);
+      printf("\n---------------Line 2: Syllable Counts-----------------\n");
+      verifyLine(haikuLine, 7);
+
+      printf("\nEnter the third line (5 syllables):");
+      scanf(" %[^\n]", haikuLine);
+      printf("\n--------------Line 3: Syllable Counts------------------");
+      verifyLine(haikuLine, 5);
       break;
     case '1':
       break;
@@ -54,7 +66,7 @@ int main()
   return 0;
 }
 
-void verifyLine(char *haikuLine)
+void verifyLine(char *haikuLine, int syllablesNeeded)
 {
   char str1[INPUTSIZE];
   strcpy(str1, haikuLine);
@@ -81,4 +93,31 @@ void verifyLine(char *haikuLine)
 
   for (i = 0; i < word; i++)
     getSyllables(newString[i]);
+
+  /*display the words in the line and their syllables*/
+  Traverse();
+
+  /*gather counts and determine if final line is valid*/
+  printf("\n----------------------Results--------------------------\n");
+  int finalTotal = syllableCount(syllablesNeeded);
+  if (finalTotal == syllablesNeeded)
+    printf("Success! Valid line\n");
+  else if (finalTotal == syllablesNeeded)
+    printf("Invalid Line\n%d syllables were needed, but %d were found\n", syllablesNeeded, finalTotal);
+  else
+  {
+    /*tell the user if there was an invalid word in their input, and reset validLine for next line input*/
+    printf("Invalid Line. An invalid word was found in the line\nPlease assure correct spelling and try again\n");
+    validLine = true;
+  }
+
+  /*remove current list of words from struct*/
+  struct wordsAndSyllables *temp;
+
+  while (listStart != NULL)
+  {
+    temp = listStart;
+    listStart = listStart->nextWord;
+    free(temp);
+  }
 }
