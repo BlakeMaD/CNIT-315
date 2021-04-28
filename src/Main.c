@@ -16,7 +16,7 @@ int main()
   char menu_option;
   char haikuLine[INPUTSIZE];
 
-  void getRequest(char *word);
+  void getSyllables(char *word);
   void verifyLine(char *haikuLine);
   do
   {
@@ -53,22 +53,45 @@ int main()
   return 0;
 }
 
-void getRequest(char *word)
+void syllableResponse(char *response, size_t size, size_t nmemb, void *stream)
 {
+  if (strstr(response, "count"))
+  {
+    char *p1, *p2;
+    p1 = strstr(response, "count\":");
+    if (p1)
+    {
+      p2 = strstr(p1, ",");
+      if (p2)
+        printf("%.*s", p2 - p1 - 7, p1 + 7);
+    }
+  }
+  else if (strstr(response, "syllables\":{}"))
+  {
+    printf("%s", response);
+  }
+}
+
+void getSyllables(char *word)
+{
+  CURL *curl;
   char apiURL[200] = "https://wordsapiv1.p.rapidapi.com/words/";
-  strcat(apiURL, word );
-  strcat(apiURL,"/syllables");
-  CURL *hnd = curl_easy_init();
+  strcat(apiURL, word);
+  strcat(apiURL, "/syllables");
 
-  curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "GET");
-  curl_easy_setopt(hnd, CURLOPT_URL, apiURL);
-
-  struct curl_slist *headers = NULL;
-  headers = curl_slist_append(headers, "x-rapidapi-key: c6ccdbfbbbmshe7408fbb59b5b09p1c4661jsn1ef62d57e9b0");
-  headers = curl_slist_append(headers, "x-rapidapi-host: wordsapiv1.p.rapidapi.com");
-  curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
-
-  CURLcode ret = curl_easy_perform(hnd);
+  curl = curl_easy_init();
+  if (curl)
+  {
+    curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "GET");
+    curl_easy_setopt(curl, CURLOPT_URL, apiURL);
+    struct curl_slist *headers = NULL;
+    headers = curl_slist_append(headers, "x-rapidapi-key: c6ccdbfbbbmshe7408fbb59b5b09p1c4661jsn1ef62d57e9b0");
+    headers = curl_slist_append(headers, "x-rapidapi-host: wordsapiv1.p.rapidapi.com");
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, syllableResponse);
+    curl_easy_perform(curl);
+    curl_easy_cleanup(curl);
+  }
 }
 
 void verifyLine(char *haikuLine)
@@ -86,7 +109,7 @@ void verifyLine(char *haikuLine)
     if (str1[i] == ' ' || str1[i] == '\0')
     {
       newString[word][letter] = '\0';
-      word++; //for next word
+      word++;     //for next word
       letter = 0; //for next word, init index to 0
     }
     else
@@ -96,6 +119,6 @@ void verifyLine(char *haikuLine)
     }
   }
 
-  for(i=0;i < word;i++)
-    getRequest(newString[i]);
+  for (i = 0; i < word; i++)
+    getSyllables(newString[i]);
 }
