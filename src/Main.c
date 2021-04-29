@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include "syllables.c"
 #include "synonyms.c"
+#include "rhyming.c"
 
 #define INPUTSIZE 120
 
@@ -18,6 +19,8 @@ int main()
   /*define variables for user input*/
   char menu_option[INPUTSIZE];
   char haikuLine[INPUTSIZE];
+  char coupletLineOne[INPUTSIZE];
+  char coupletLineTwo[INPUTSIZE];
 
   void verifyHaiku(char *haikuLine, int syllablesNeeded);
   void findSynonyms(char *haikuLine);
@@ -61,15 +64,14 @@ int main()
       findSynonyms(haikuLine);
       break;
     case '2':
-      printf("\nEnter the first line:");
-      scanf(" %[^\n]", haikuLine);
-      printf("\n---------------Line 2: Syllable Counts-----------------\n");
-      verifyHaiku(haikuLine, 7);
+      printf("\nReminder: The last word of the line must rhyme.\nFor a proper result, do not include punctuation at the end of the line\n");
+      printf("\nEnter your first line:");
+      scanf(" %[^\n]", coupletLineOne);
 
-      printf("\nEnter the second line:");
-      scanf(" %[^\n]", haikuLine);
-      printf("\n--------------Line 3: Syllable Counts------------------");
-      verifyHaiku(haikuLine, 5);
+      printf("\nEnter your second line:");
+      scanf(" %[^\n]", coupletLineTwo);
+
+      verifyCouplet(coupletLineOne, coupletLineTwo);
       break;
     case '3':
       aboutDetails();
@@ -165,6 +167,33 @@ void findSynonyms(char *haikuLine)
 
 void verifyCouplet(char *lineOne, char *lineTwo)
 {
+
+  char *lineOneWord;
+  char *lineTwoWord;
+
+  if (strrchr(lineOne, ' ') != NULL)
+  {
+    lineOneWord = strrchr(lineOne, ' ');
+  }
+  else{
+    lineOneWord = lineOne;
+  }
+  if (lineOneWord && *(lineOneWord + 1))
+    lineOneWord += 1;
+
+  if (strrchr(lineTwo, ' ') != NULL)
+  {
+    lineTwoWord = strrchr(lineTwo, ' ');
+  }
+  else{
+    lineTwoWord = lineTwo;
+  }
+  if (lineTwoWord && *(lineTwoWord + 1))
+    lineTwoWord += 1;
+  
+  secondWord = lineTwoWord;
+
+  getRhymingWords(lineOneWord);
 }
 void aboutDetails()
 {
