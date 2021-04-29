@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "syllables.c" 
+#include "syllables.c"
 #include "synonyms.c"
 
 #define INPUTSIZE 120
@@ -19,8 +19,10 @@ int main()
   char menu_option[INPUTSIZE];
   char haikuLine[INPUTSIZE];
 
-  void verifyLine(char *haikuLine, int syllablesNeeded);
+  void verifyHaiku(char *haikuLine, int syllablesNeeded);
   void findSynonyms(char *haikuLine);
+  void aboutDetails();
+  void verifyCouplet(char *lineOne, char *lineTwo);
 
   do
   {
@@ -29,6 +31,7 @@ int main()
     printf("0: Haiku Verification\n");
     printf("1: Alternative Words\n");
     printf("2: Couplet Verification\n");
+    printf("3: About Info\n");
     printf("e: Exit Program\n");
     printf("\nPlease enter an option from the main menu: ");
     scanf(" %s", menu_option);
@@ -36,20 +39,21 @@ int main()
     switch (menu_option[0])
     {
     case '0':
-      printf("\nEnter the first line (5 syllables):");
+      printf("\n*Note:\n\tThe amount of words accepted is the same as syllables needed, as a word contains at least one syllable");
+      printf("\n\nEnter the first line (5 syllables):");
       scanf(" %[^\n]", haikuLine);
       printf("\n---------------Line 1: Syllable Counts-----------------");
-      verifyLine(haikuLine, 5);
+      verifyHaiku(haikuLine, 5);
 
       printf("\nEnter the second line (7 syllables):");
       scanf(" %[^\n]", haikuLine);
       printf("\n---------------Line 2: Syllable Counts-----------------\n");
-      verifyLine(haikuLine, 7);
+      verifyHaiku(haikuLine, 7);
 
       printf("\nEnter the third line (5 syllables):");
       scanf(" %[^\n]", haikuLine);
       printf("\n--------------Line 3: Syllable Counts------------------");
-      verifyLine(haikuLine, 5);
+      verifyHaiku(haikuLine, 5);
       break;
     case '1':
       printf("\nEnter a word to see its synonyms and their syllable count:");
@@ -57,6 +61,18 @@ int main()
       findSynonyms(haikuLine);
       break;
     case '2':
+      printf("\nEnter the first line:");
+      scanf(" %[^\n]", haikuLine);
+      printf("\n---------------Line 2: Syllable Counts-----------------\n");
+      verifyHaiku(haikuLine, 7);
+
+      printf("\nEnter the second line:");
+      scanf(" %[^\n]", haikuLine);
+      printf("\n--------------Line 3: Syllable Counts------------------");
+      verifyHaiku(haikuLine, 5);
+      break;
+    case '3':
+      aboutDetails();
       break;
     case 'e':
       /*stop program execution*/
@@ -74,16 +90,16 @@ int main()
   return 0;
 }
 
-void verifyLine(char *haikuLine, int syllablesNeeded)
+void verifyHaiku(char *haikuLine, int syllablesNeeded)
 {
   char str1[INPUTSIZE];
   strcpy(str1, haikuLine);
-  char newString[30][30];
-  int i, letter, word;
+  char newString[9][30];
+  int i, letter, word, wordCount;
 
   letter = 0;
   word = 0;
-  for (i = 0; i <= (strlen(str1)); i++)
+  for (i = 0; i <= (strlen(str1)) && word < syllablesNeeded; i++)
   {
     // if space or NULL found, assign NULL into newString[word]
     if (str1[i] == ' ' || str1[i] == '\0')
@@ -111,11 +127,11 @@ void verifyLine(char *haikuLine, int syllablesNeeded)
   if (finalTotal == syllablesNeeded && validLine)
     printf("Success! Valid line\n");
   else if (finalTotal != syllablesNeeded && validLine)
-    printf("Invalid Line\n%d syllables were needed, but %d were found\n", syllablesNeeded, finalTotal);
+    printf("Invalid Line:\n\t%d syllables were needed, but %d were found\n", syllablesNeeded, finalTotal);
   else
   {
     /*tell the user if there was an invalid word in their input, and reset validLine for next line input*/
-    printf("Invalid Line. An invalid word was found in the line\nPlease assure correct spelling and try again\n");
+    printf("Invalid Line:\n\tAn invalid word was found in the line.\n\tPlease assure correct spelling and try again\n");
     validLine = true;
   }
 
@@ -133,7 +149,7 @@ void verifyLine(char *haikuLine, int syllablesNeeded)
 void findSynonyms(char *haikuLine)
 {
   getSynonyms(haikuLine);
-
+  printf("\n");
   Traverse();
 
   /*remove current list of words from struct*/
@@ -145,4 +161,25 @@ void findSynonyms(char *haikuLine)
     listStart = listStart->nextWord;
     free(temp);
   }
+}
+
+void verifyCouplet(char *lineOne, char *lineTwo)
+{
+}
+void aboutDetails()
+{
+  printf("\n\t---------------Option 0: Verify Haiku-----------------");
+  printf("\nA Haiku is a three line poem, where the syllables in each line are 5-7-5 respectively\n");
+
+  printf("\n\t---------------Option 1: Alternative Words-----------------");
+  printf("\n    Enter a word to find a list of synonyms, while also showing their syllable count\n");
+  printf("this is especially useful for finding words with similar meanings to replace words in the haiku.\n");
+
+  printf("\n\t---------------Option 2: Couplets-----------------");
+  printf("\nA couplet, in its simplest form, is a two line poem whose ending words rhyme\n");
+
+  printf("\n\t---------------Warnings:-----------------");
+  printf("\n    Some words from the external api, WordsAPI, return an empty body for syllable count.\n");
+  printf("Since these are often short words like \"is\" or \"I\" the program assumes a word with an empty body is 1 syllable long.\n");
+  printf("This assumption is not always correct, so it reccomended to follow your better judgements\n");
 }
