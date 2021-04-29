@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <curl/curl.h>
+#include <curl/curl.h> /* has to be installed with "sudo apt-get install libcurl4-openssl-dev" */
 #include <stdbool.h>
 
 int currentWordSyllableCount;
@@ -95,8 +95,6 @@ void syllableResponse(char *response, size_t size, size_t nmemb, void *stream)
         validWord = false;
         validLine = false;
     }
-    
-
     currentWordSyllableCount = count;
 }
 
