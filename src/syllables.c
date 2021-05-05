@@ -112,7 +112,7 @@ void getSyllables(char *word)
         curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "GET");
         curl_easy_setopt(curl, CURLOPT_URL, apiURL);
         struct curl_slist *headers = NULL;
-        headers = curl_slist_append(headers, "x-rapidapi-key: c6ccdbfbbbmshe7408fbb59b5b09p1c4661jsn1ef62d57e9b0");
+        headers = curl_slist_append(headers, "x-rapidapi-key: "); /* Go to Rapid Api's website for the words api, and subscribe to get your own api key*/
         headers = curl_slist_append(headers, "x-rapidapi-host: wordsapiv1.p.rapidapi.com");
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, syllableResponse);
